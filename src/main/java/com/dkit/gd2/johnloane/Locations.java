@@ -97,7 +97,31 @@ public class Locations implements Map<Integer, Location>
         try
         {
             fileScanner = new Scanner(new BufferedReader(new FileReader("directions.txt")));
-            
+            fileScanner.useDelimiter(",");
+            while(fileScanner.hasNextLine())
+            {
+                int loc = fileScanner.nextInt();
+                fileScanner.skip(fileScanner.delimiter());
+                String direction = fileScanner.next();
+                fileScanner.skip(fileScanner.delimiter());
+                String dest = fileScanner.nextLine();
+                int destination = Integer.parseInt(dest);
+
+                System.out.println(loc + ": " + direction + ": " + destination);
+                Location location = locations.get(loc);
+                location.addExit(direction, destination);
+            }
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            fnfe.printStackTrace();
+        }
+        finally
+        {
+            if(fileScanner != null)
+            {
+                fileScanner.close();
+            }
         }
 
 
