@@ -1,9 +1,6 @@
 package com.dkit.gd2.johnloane;
 
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer, Location>
@@ -18,11 +15,15 @@ public class Locations implements Map<Integer, Location>
     {
         //Modern way - try with resources - the will file will
         //automatically be closed for us - nice!
-        try (FileWriter locationsFile = new FileWriter("locations.txt"))
+        try (FileWriter locationsFile = new FileWriter("locations.txt"); FileWriter directionsFile = new FileWriter("directions.txt"))
         {
             for (Location location : locations.values())
             {
                 locationsFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
+                for(String direction : location.getExits().keySet())
+                {
+                    directionsFile.write(location.getLocationID()+","+direction+","+location.getExits().get(direction)+"\n");
+                }
             }
         }
         catch(IOException ioe)
@@ -72,15 +73,34 @@ public class Locations implements Map<Integer, Location>
             fileScanner.useDelimiter(",");
             while(fileScanner.hasNextLine())
             {
-                //Homework - try and read in the values
-                //Remember - no exits yet
+                int loc = fileScanner.nextInt();
+                fileScanner.skip(fileScanner.delimiter());
+                String description = fileScanner.nextLine();
+                System.out.println("Imported location " + loc + ": " + description);
+                Map<String, Integer> tempExit = new HashMap<>();
+                locations.put(loc, new Location(loc, description, tempExit));
             }
         }
         catch(FileNotFoundException fnfe)
         {
-
+            fnfe.printStackTrace();
         }
-    }
+        finally
+        {
+            if(fileScanner != null)
+            {
+                fileScanner.close();
+            }
+        }
+
+        //Now read in the exits
+        try
+        {
+            fileScanner = new Scanner(new BufferedReader(new FileReader("directions.txt")));
+            
+        }
+
+
 //        Map<String, Integer> tempExit = new HashMap<String, Integer>();
 //        locations.put(0, new Location(0, "You are sitting in front of a computer, learning Java", null));
 //
@@ -112,7 +132,7 @@ public class Locations implements Map<Integer, Location>
 //        tempExit.put("W", 2);
 //
 //        locations.put(5, new Location(5, "You have entered a room with blood red walls. You notice a table that has a cup of black coffee and a flashlight", tempExit));
-  //  }
+    }
 
 
 
