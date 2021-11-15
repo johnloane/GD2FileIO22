@@ -15,7 +15,7 @@ public class Locations implements Map<Integer, Location>
     {
         //Modern way - try with resources - the will file will
         //automatically be closed for us - nice!
-        try (FileWriter locationsFile = new FileWriter("locations.txt"); FileWriter directionsFile = new FileWriter("directions.txt"))
+        try (BufferedWriter locationsFile = new BufferedWriter(new FileWriter("locations.txt")); BufferedWriter directionsFile = new BufferedWriter(new FileWriter("directions.txt")))
         {
             for (Location location : locations.values())
             {
@@ -69,7 +69,7 @@ public class Locations implements Map<Integer, Location>
         Scanner fileScanner = null;
         try
         {
-            fileScanner = new Scanner(new FileReader("locations.txt"));
+            fileScanner = new Scanner(new FileReader("locations_big.txt"));
             fileScanner.useDelimiter(",");
             while(fileScanner.hasNextLine())
             {
@@ -94,35 +94,33 @@ public class Locations implements Map<Integer, Location>
         }
 
         //Now read in the exits
-        try
+        try(BufferedReader directionsFile = new BufferedReader(new FileReader("directions_big.txt")))
         {
-            fileScanner = new Scanner(new BufferedReader(new FileReader("directions.txt")));
-            fileScanner.useDelimiter(",");
-            while(fileScanner.hasNextLine())
+            String input;
+            while((input = directionsFile.readLine()) != null)
             {
-                int loc = fileScanner.nextInt();
-                fileScanner.skip(fileScanner.delimiter());
-                String direction = fileScanner.next();
-                fileScanner.skip(fileScanner.delimiter());
-                String dest = fileScanner.nextLine();
-                int destination = Integer.parseInt(dest);
+//                int loc = fileScanner.nextInt();
+//                fileScanner.skip(fileScanner.delimiter());
+//                String direction = fileScanner.next();
+//                fileScanner.skip(fileScanner.delimiter());
+//                String dest = fileScanner.nextLine();
+//                int destination = Integer.parseInt(dest);
+                String[] data = input.split(",");
+                int loc = Integer.parseInt(data[0]);
+                String direction = data[1];
+                int destination = Integer.parseInt(data[2]);
+
 
                 System.out.println(loc + ": " + direction + ": " + destination);
                 Location location = locations.get(loc);
                 location.addExit(direction, destination);
             }
         }
-        catch(FileNotFoundException fnfe)
+        catch(IOException io)
         {
-            fnfe.printStackTrace();
+            io.printStackTrace();
         }
-        finally
-        {
-            if(fileScanner != null)
-            {
-                fileScanner.close();
-            }
-        }
+
 
 
 //        Map<String, Integer> tempExit = new HashMap<String, Integer>();
