@@ -1,0 +1,6 @@
+0,You are sitting in front of a computer, learning Java
+1,You have entered into a server room
+2,You have entered a brightly lit room. You notice that there is a counter with various items that could make tea
+3,You have entered a dimly lit room with no items on the counter for making tea
+4,You are in a medium lit room with no counter
+5,You have entered a room with blood red walls. You notice a table that has a cup of black coffee and a flashlight
